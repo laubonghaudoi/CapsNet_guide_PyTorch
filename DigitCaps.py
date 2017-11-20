@@ -61,7 +61,7 @@ class DigitCaps(nn.Module):
         The coupling coefficients `b` can be seen as a kind of attention matrix
         in the attentional sequence-to-sequence networks, which is widely used in
         Neural Machine Translation systems. For tutorials on  attentional seq2seq
-        models, see 
+        models, see https://arxiv.org/abs/1703.01619 or
         http://pytorch.org/tutorials/intermediate/seq2seq_translation_tutorial.html
 
         Reference: Section 2, Procedure 1

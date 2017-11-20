@@ -3,7 +3,7 @@
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=plastic)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=plastic)](https://opensource.org/licenses/Apache-2.0)
 
-This is my PyTorch implementation of the CapsNet in Hinton's paper [Dynamic Routing Between Capsules](https://arxiv.org/abs/1710.09829). I try to implement it in a style that help newcomers understand the architecture of CapsNet and the idea of Capsules. Therefore I am not going to wrap the codes into capsule layer APIs, and I more oftenly declare constants rather than passing parameters to functions, neither are the codes optimized for speed. The classes and functions are supplemented with detailed comments, so to read and understand the codes, simply start from the comments in `main.py` and follow the order list at the head of the file.
+This is my PyTorch implementation of the CapsNet in Hinton's paper [Dynamic Routing Between Capsules](https://arxiv.org/abs/1710.09829v2). I try to implement it in a style that help newcomers understand the architecture of CapsNet and the idea of Capsules. Therefore I am not going to wrap the codes into capsule layer APIs, and I more oftenly declare constants rather than passing parameters to functions, neither are the codes optimized for speed. The classes and functions are supplemented with detailed comments, so to read and understand the codes, simply start from the comments in `main.py` and follow the order list at the head of the file.
 
 As I am busy these days, I might not have time to checkout and fix every issue. But contributions are highly welcomed. If you find any bugs or errors in the codes, please do not hesitate to open an issue or a pull request.
 
@@ -11,7 +11,7 @@ As I am busy these days, I might not have time to checkout and fix every issue. 
 
 - pytorch 0.2.0
 - torchvision
-- pytorch-extras 
+- pytorch-extras (For one-hot vector conversion)
 - tensorboard-pytorch
 - tqdm
 

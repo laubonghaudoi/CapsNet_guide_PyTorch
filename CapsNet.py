@@ -129,8 +129,8 @@ class CapsNet(nn.Module):
             `marginal_loss`: Scalar Variable
             `reconstruction_loss`: Scalar Variable
 
-        The reconstruction loss is scaled down by 5e-4, serving as
-        a regularization method.
+        The reconstruction loss is scaled down by 5e-4, serving as a
+        regularization method.
 
         Reference: Section 4.1
         '''

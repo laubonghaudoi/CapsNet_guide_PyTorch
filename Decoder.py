@@ -34,9 +34,9 @@ class Decoder(nn.Module):
         Return:
             `reconstruction`: [batch_size, 784]
 
-        We send the outputs of the `DigitCaps` layer, which is a [batch_size, 10, 16]
-        size tensor into the decoder network, and reconstruct a [batch_size, 784]
-        size tensor representing the image.
+        We send the outputs of the `DigitCaps` layer, which is a
+        [batch_size, 10, 16] size tensor into the decoder network, and
+        reconstruct a [batch_size, 784] size tensor representing the image.
         '''
         batch_size = target.size(0)
 
