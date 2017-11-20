@@ -6,8 +6,9 @@ import torch.nn.functional as F
 class Decoder(nn.Module):
     '''
     The decoder network consists of 3 fully connected layers. For each
-    [10, 16] output, we mask out the incorrect predictions. Then send
-    it to the decoder network to reconstruct a [784,] size image.
+    [10, 16] output, we mask out the incorrect predictions, and send
+    the [16,] vector to the decoder network to reconstruct a [784,] size
+    image.
 
     Reference: Section 4.1, Fig. 2
     '''
@@ -20,7 +21,7 @@ class Decoder(nn.Module):
         super(Decoder, self).__init__()
         self.opt = opt
 
-        self.fc1 = nn.Linear(10 * 16, 512)
+        self.fc1 = nn.Linear(16, 512)
         self.fc2 = nn.Linear(512, 1024)
         self.fc3 = nn.Linear(1024, 784)
 
@@ -33,7 +34,7 @@ class Decoder(nn.Module):
         Return:
             `reconstruction`: [batch_size, 784]
 
-        We send the outputs of the `DigitCaps` layer, which is a [batch_size, 16, 10]
+        We send the outputs of the `DigitCaps` layer, which is a [batch_size, 10, 16]
         size tensor into the decoder network, and reconstruct a [batch_size, 784]
         size tensor representing the image.
         '''
@@ -48,8 +49,8 @@ class Decoder(nn.Module):
 
         # v: [bath_size, 10, 16]
         v_masked = mask * v
-        v_masked = v_masked.view(batch_size, -1)
-        assert v_masked.size() == torch.Size([batch_size, 160])
+        v_masked = torch.sum(v_masked, dim=1)
+        assert v_masked.size() == torch.Size([batch_size, 16])
 
         # Forward
         v = self.fc1(v_masked)
