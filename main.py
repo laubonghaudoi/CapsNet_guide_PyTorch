@@ -1,11 +1,13 @@
 """
-A PyTorch implementation of CapsNet.
+A tutorial-style implementation of CapsNet in PyTorch.
+
+Paper link: https://arxiv.org/abs/1710.09829v2
 
 @author laubonghaudoi
 
 For better understanding, read the codes and comments in the following order:
 
-1. `__main__()` in `main.py`
+1. `__main__` in `main.py`
 2. `utils.py`
 3. `CapsNet.__init__()` and `CapsNet.forward()` in `CapsNet.py`
 4. `PrimaryCaps.py`
@@ -177,7 +179,7 @@ if __name__ == "__main__":
         print("{}: {}".format(name, list(param.size())))
     n_params = sum([p.nelement() for p in model.parameters()])
     # The coupling coefficients b_ij are not included in the parameter list,
-    # we need to add them mannually. 
+    # we need to add them mannually, which is 1152 * 10 = 11520.
     print('\nTotal number of parameters: %d \n' % (n_params+11520))
 
     # Make model checkpoint directory
