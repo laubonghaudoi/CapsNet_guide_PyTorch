@@ -75,14 +75,14 @@ def train(opt, train_loader, test_loader, model, writer):
             optimizer.step()
 
             # Log losses
-            writer.add_scalar('train/loss', L.data[0], global_step)
-            writer.add_scalar('train/marginal_loss', m_loss.data[0], global_step)
-            writer.add_scalar('train/reconstruction_loss', r_loss.data[0], global_step)
+            writer.add_scalar('train/loss', L.item(), global_step)
+            writer.add_scalar('train/marginal_loss', m_loss.item(), global_step)
+            writer.add_scalar('train/reconstruction_loss', r_loss.item(), global_step)
 
             # Print losses
             if batch_idx % opt.print_every == 0:
                 tqdm.write('Epoch: {}    Loss: {:.6f}   Marginal loss: {:.6f}   Recons. loss: {:.6f}'.format(
-                    epoch, L.data[0], m_loss.data[0], r_loss.data[0]))
+                    epoch, L.item(), m_loss.item(), r_loss.item()))
 
         # Print time elapsed for every epoch
         end_time = time.time()
@@ -142,20 +142,20 @@ def test(opt, test_loader, model, writer, epoch, num_batches):
     margin_loss /= len(test_loader)
     recons_loss /= len(test_loader)
     acc = correct / len(test_loader.dataset)
-    writer.add_scalar('test/loss', loss.data[0], step)
-    writer.add_scalar('test/marginal_loss', margin_loss.data[0], step)
-    writer.add_scalar('test/reconstruction_loss', recons_loss.data[0], step)
+    writer.add_scalar('test/loss', loss.item(), step)
+    writer.add_scalar('test/marginal_loss', margin_loss.item(), step)
+    writer.add_scalar('test/reconstruction_loss', recons_loss.item(), step)
     writer.add_scalar('test/accuracy', acc, step)
-    
+
     # Print test losses
     print('\nTest loss: {:.4f}   Marginal loss: {:.4f}   Recons loss: {:.4f}'.format(
-        loss.data[0], margin_loss.data[0], recons_loss.data[0]))
+        loss.item(), margin_loss.item(), recons_loss.item()))
     print('Accuracy: {}/{} ({:.0f}%)\n'.format(correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
-    
+
     # Checkpoint model
     torch.save(model, './ckpt/epoch_{}-loss_{:.6f}-acc_{:.6f}.pt'.format(
-        epoch, loss.data[0], acc))
+        epoch, loss.item(), acc))
 
 
 if __name__ == "__main__":

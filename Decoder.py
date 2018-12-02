@@ -55,7 +55,7 @@ class Decoder(nn.Module):
         # Forward
         v = self.fc1(v_masked)
         v = self.fc2(v)
-        reconstruction = F.sigmoid(self.fc3(v))
+        reconstruction = torch.sigmoid(self.fc3(v))
 
         assert reconstruction.size() == torch.Size([batch_size, 784])
         return reconstruction
