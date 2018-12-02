@@ -1,0 +1,9 @@
+# vim backup file
+*~
+
+# python byte code file
+*.pyc
+
+# data directory
+data/
+ckpt/
