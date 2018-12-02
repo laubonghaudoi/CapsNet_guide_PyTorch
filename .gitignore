@@ -3,6 +3,7 @@
 
 # python byte code file
 *.pyc
+__pycache__/
 
 # data directory
 data/
