@@ -7,8 +7,8 @@ from torch.autograd import Variable
 class DigitCaps(nn.Module):
     '''
     The `DigitCaps` layer consists of 10 16D capsules. Compared to the traditional
-    scalar output neurons in fully connected layers(FCN), the `DigitCaps` layer
-    can be seen as an FCN with 16-dimensional output neurons, where we call
+    scalar output neurons in fully connected networks(FCN), the `DigitCaps` layer
+    can be seen as an FCN with ten 16-dimensional output neurons, which we call
     these neurons "capsules".
 
     In this layer, we take the input `[1152, 8]` tensor `u` as 1152 [8,] vectors
@@ -34,7 +34,7 @@ class DigitCaps(nn.Module):
         The the coupling coefficients `b` [1152, 10] is a temporary variable which
         does NOT belong to the layer's parameters. In other words, `b` is not updated
         by gradient back-propagations. Instead, we update `b` by Dynamic Routing
-        in every forward propagation. See docstring of `self.forward` for details.
+        in every forward propagation. See the docstring of `self.forward` for details.
         '''
         super(DigitCaps, self).__init__()
         self.opt = opt

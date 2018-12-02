@@ -13,13 +13,13 @@ As I am busy these days, I might not have time to checkout and fix every issue. 
 
 ## Requirements
 
-- pytorch 0.2.0
+- pytorch 0.4.1
 - torchvision
 - pytorch-extras (For one-hot vector conversion)
 - tensorboard-pytorch
 - tqdm
 
-All codes are tested under Python 3.6.3.
+All codes are tested under Python 3.6.
 
 ## Get Started
 

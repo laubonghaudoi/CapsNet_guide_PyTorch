@@ -17,7 +17,7 @@ For better understanding, read the codes and comments in the following order:
 8. `train()` and `test()` in `main.py`
 
 You might find helpful with the paper *Dynamic Routing Between Capsules*
-at your hand for referencing.
+at your hand for referencing when reading these codes.
 """
 
 import os

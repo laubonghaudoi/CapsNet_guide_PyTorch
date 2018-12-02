@@ -28,8 +28,8 @@ class Decoder(nn.Module):
     def forward(self, v, target):
         '''
         Args:
-            v: [batch_size, 10, 16]
-            target: [batch_size, 10]
+            `v`: [batch_size, 10, 16]
+            `target`: [batch_size, 10]
 
         Return:
             `reconstruction`: [batch_size, 784]
