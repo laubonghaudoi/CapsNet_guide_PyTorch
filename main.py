@@ -2,22 +2,25 @@
 A tutorial-style implementation of CapsNet in PyTorch.
 
 Paper link: https://arxiv.org/abs/1710.09829v2
+Paper link: https://openreview.net/pdf?id=HJWLfGWRb
 
 @author laubonghaudoi
+@author Alexbanana19
 
 For better understanding, read the codes and comments in the following order:
 
 1. `__main__` in `main.py`
 2. `utils.py`
+3. `capsule_utils.py`
 3. `CapsNet.__init__()` and `CapsNet.forward()` in `CapsNet.py`
 4. `PrimaryCaps.py`
-5. `DigitCaps.py`
-6. `Decoder.py`
-7. `CapsNet.marginal_loss()`, `CapsNet.reconstruction_loss()` and` CapsNet.loss()` in `CapsNet.py`
-8. `train()` and `test()` in `main.py`
+5. `ConvCaps.py`
+6. `ClassCaps.py`
+7. `Decoder.py`
+9. `train()` and `test()` in `main.py`
 
-You might find helpful with the paper *Dynamic Routing Between Capsules*
-at your hand for referencing when reading these codes.
+You might find helpful with the paper *Dynamic Routing Between Capsules* and
+*Matrix Capsules with EM Routing* at your hand for referencing.
 """
 
 import os
@@ -37,6 +40,7 @@ from utils import get_opts, get_dataloader
 # by pytorch-extras
 setattr(torch, 'one_hot', torch_extras.one_hot)
 
+'''TODO: lambda and margin schedule'''
 
 def train(opt, train_loader, test_loader, model, writer):
     num_data = len(train_loader.dataset)
@@ -57,8 +61,8 @@ def train(opt, train_loader, test_loader, model, writer):
             global_step = batch_idx + epoch * num_batches
 
             # Transform to one-hot indices: [batch_size, 10]
-            target = torch.one_hot((batch_size, 10), target.view(-1, 1))
-            assert target.size() == torch.Size([batch_size, 10])
+            target = torch.one_hot((batch_size, opt.num_class), target.view(-1, 1))
+            assert target.size() == torch.Size([batch_size, opt.num_class])
 
             # Use GPU if available
             data, target = Variable(data), Variable(target)
@@ -76,12 +80,12 @@ def train(opt, train_loader, test_loader, model, writer):
 
             # Log losses
             writer.add_scalar('train/loss', L.item(), global_step)
-            writer.add_scalar('train/marginal_loss', m_loss.item(), global_step)
+            writer.add_scalar('train/main_loss', m_loss.item(), global_step)
             writer.add_scalar('train/reconstruction_loss', r_loss.item(), global_step)
 
             # Print losses
             if batch_idx % opt.print_every == 0:
-                tqdm.write('Epoch: {}    Loss: {:.6f}   Marginal loss: {:.6f}   Recons. loss: {:.6f}'.format(
+                tqdm.write('Epoch: {}    Loss: {:.6f}   Main loss: {:.6f}   Recons. loss: {:.6f}'.format(
                     epoch, L.item(), m_loss.item(), r_loss.item()))
 
         # Print time elapsed for every epoch
@@ -91,8 +95,6 @@ def train(opt, train_loader, test_loader, model, writer):
 
         # Test model
         test(opt, test_loader, model, writer, epoch, num_batches)
-
-
 
 def test(opt, test_loader, model, writer, epoch, num_batches):
     loss = 0
@@ -109,8 +111,8 @@ def test(opt, test_loader, model, writer, epoch, num_batches):
 
         batch_size = data.size(0)
         # Transform to one-hot indices: [batch_size, 10]
-        target = torch.one_hot((batch_size, 10), target.view(-1, 1))
-        assert target.size() == torch.Size([batch_size, 10])
+        target = torch.one_hot((batch_size, opt.num_class), target.view(-1, 1))
+        assert target.size() == torch.Size([batch_size, opt.num_class])
 
         # Use GPU if available
         data, target = Variable(data, volatile=True), Variable(target)
@@ -143,7 +145,7 @@ def test(opt, test_loader, model, writer, epoch, num_batches):
     recons_loss /= len(test_loader)
     acc = correct / len(test_loader.dataset)
     writer.add_scalar('test/loss', loss.item(), step)
-    writer.add_scalar('test/marginal_loss', margin_loss.item(), step)
+    writer.add_scalar('test/main_loss', margin_loss.item(), step)
     writer.add_scalar('test/reconstruction_loss', recons_loss.item(), step)
     writer.add_scalar('test/accuracy', acc, step)
 

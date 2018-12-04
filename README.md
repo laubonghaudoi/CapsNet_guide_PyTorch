@@ -3,17 +3,20 @@
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=plastic)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=plastic)](https://opensource.org/licenses/Apache-2.0)
 
-This is my PyTorch implementation of the CapsNet in Hinton's paper [Dynamic Routing Between Capsules](https://arxiv.org/abs/1710.09829v2). I try to implement it in a style that help newcomers understand the architecture of CapsNet and the idea of Capsules. Therefore I am not going to wrap the codes into capsule layer APIs, and I more oftenly declare constants rather than passing parameters to functions, neither are the codes optimized for speed. The classes and functions are supplemented with detailed comments, so to read and understand the codes, simply start from the comments in `main.py` and follow the order list at the head of the file.
+This is my PyTorch implementation of the CapsNet in Hinton's paper [Matrix Capsules with EM Routing](https://openreview.net/pdf?id=HJWLfGWRb). EM-Routing method is added and the code is refactorized. Unlike the tutorial-version on branch master, this optimized version will focus more on execution speed and memory allocation.
 
-The picture below clearly illustrates the core idea of capsules:
+## TODOs
 
-![capsuleVSneuron](./img/capsuleVSneuron.png)
-
-As I am busy these days, I might not have time to checkout and fix every issue. But contributions are highly welcomed. If you find any bugs or errors in the codes, please do not hesitate to open an issue or a pull request.
+- SmallNORB Datasets
+- Training and Test Results
+- Hyper-Parameters Tuning
+- Routing Visualization
+- Adversarial Robustness
+- Cython Extension
 
 ## Requirements
 
-- pytorch 0.4.1
+- pytorch 0.4.0
 - torchvision
 - pytorch-extras (For one-hot vector conversion)
 - tensorboard-pytorch
@@ -48,7 +51,7 @@ Based on my own experiments, one train epoch takes about 6 minutes on a GTX 1080
 
 I have not fine tuned the parameters, results below are obtained with the default configurations in the codes. You can find this Tensorboard log in `./runs/sample/`. Please do make a pull request if you find out the best parameters :)
 
-### Train 
+### Train
 
 ![train](./img/train.png)
 
@@ -56,19 +59,13 @@ I have not fine tuned the parameters, results below are obtained with the defaul
 
 ![test](./img/test.png)
 
-### Reconstructed images
+### Routing Visualization
+To be updated
 
-![e1_l28.29](./img/e1_l28.29.png)
-![e2_l30.37](./img/e2_l30.37.png)
-![e3_l27.20](./img/e3_l27.20.png)
-![e4_l28.29](./img/e4_l28.29.png)
-![e5_l26.02](./img/e5_l26.02.png)
-![e6_l25.26](./img/e6_l25.26.png)
-![e7_l25.02](./img/e7_l25.02.png)
-![e8_l24.86](./img/e8_l24.86.png)
-![e9_l24.83](./img/e9_l24.83.png)
-![e10_l24.78](./img/e10_l24.78.png)
+### Adversarial Robustness
+To be updated
 
 ## Reference
 
-[1] Sabour, Sara, Nicholas Frosst, and Geoffrey E. Hinton. "Dynamic Routing Between Capsules." arXiv preprint arXiv:1710.09829 (2017).
+[1] Geoffrey Hinton, Nicholas Frosst, and Sara Sabour. Matrix capsules with em routing. ICLR,
+2018.

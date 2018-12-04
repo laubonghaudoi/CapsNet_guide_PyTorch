@@ -67,7 +67,7 @@ def spread_loss(v, target, m=0.2):
     b = v.size(0)
     tar_ind = target.argmax(1).view(b)
     a_t = v[list(range(b)),tar_ind].view(b, 1)
-    loss = torch.sum(torch.max(torch.zeros_like(v), m-(a_t-v))**2)
+    loss = torch.mean(torch.sum(torch.max(torch.zeros_like(v), m-(a_t-v))**2, 1))
     return loss
 
 def marginal_loss(v, target, l=0.5):
@@ -103,7 +103,7 @@ def marginal_loss(v, target, l=0.5):
     # Eq.4
     marginal_loss = T_c * (torch.max(zeros, 0.9 - norm) ** 2) + \
         (1 - T_c) * l * (torch.max(zeros, norm - 0.1) ** 2)
-    marginal_loss = torch.sum(marginal_loss)
+    marginal_loss = torch.mean(torch.sum(marginal_loss, 1))
 
     return marginal_loss
 
@@ -127,5 +127,5 @@ def reconstruction_loss(reconstruction, image, opt):
     assert image.size() == (batch_size, opt.img_size**2)
 
     # Scalar Variable
-    recon_loss = torch.sum((reconstruction - image) ** 2)
+    recon_loss = torch.mean(torch.sum((reconstruction - image) ** 2, 1))
     return recon_loss
