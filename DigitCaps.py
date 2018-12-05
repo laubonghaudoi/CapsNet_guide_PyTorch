@@ -27,11 +27,11 @@ class DigitCaps(nn.Module):
 
     def __init__(self, opt):
         '''
-        There is only one parameter in this layer, `W` [1152, 10, 16, 8], where 
-        every [16, 8] is a weight matrix W_ij in Eq.2, that is, there are 11520
+        There is only one parameter in this layer, `W` [1, 1152, 10, 16, 8], where
+        every [8, 16] is a weight matrix W_ij in Eq.2, that is, there are 11520
         `W_ij`s in total.
 
-        The the coupling coefficients `b` [1152, 10] is a temporary variable which
+        The the coupling coefficients `b` [64, 1152, 10, 1] is a temporary variable which
         does NOT belong to the layer's parameters. In other words, `b` is not updated
         by gradient back-propagations. Instead, we update `b` by Dynamic Routing
         in every forward propagation. See the docstring of `self.forward` for details.
@@ -39,7 +39,7 @@ class DigitCaps(nn.Module):
         super(DigitCaps, self).__init__()
         self.opt = opt
 
-        self.W = nn.Parameter(torch.randn(1152, 10, 16, 8))
+        self.W = nn.Parameter(torch.randn(1, 1152, 10, 8, 16))
 
     def forward(self, u):
         '''
@@ -51,7 +51,7 @@ class DigitCaps(nn.Module):
         In this layer, we vectorize our computations by calling `W` and using
         `torch.matmul()`. Thus the full computaion steps are as follows.
             1. Expand `W` into batches and compute `u_hat` (Eq.2)
-            2. Line 2: Initialize `b` into zeros 
+            2. Line 2: Initialize `b` into zeros
             3. Line 3: Start Routing for `r` iterations:
                 1. Line 4: c = softmax(b)
                 2. Line 5: s = sum(c * u_hat)
@@ -70,31 +70,25 @@ class DigitCaps(nn.Module):
 
         # First, we need to expand the dimensions of `W` and `u` to compute `u_hat`
         assert u.size() == torch.Size([batch_size, 1152, 8])
-        # u: [batch_size, 1152, 8, 1]
-        u = torch.unsqueeze(u, dim=3)
-        # u_stack: [batch_size, 1152, 10, 8, 1]
-        u_stack = torch.stack([u for i in range(10)], dim=2)
-        # W_batch: [batch_size, 1152, 10, 16, 8]
-        W_batch = torch.stack(
-            [self.W for i in range(batch_size)], dim=0)
-
+        # u: [batch_size, 1152, 1, 1, 8]
+        u = torch.unsqueeze(u, dim=2)
+        u = torch.unsqueeze(u, dim=2)
         # Now we compute u_hat in Eq.2
         # u_hat: [batch_size, 1152, 10, 16]
-        u_hat = torch.matmul(W_batch, u_stack).squeeze()
+        u_hat = torch.matmul(u, self.W).squeeze()
 
         # Line 2: Initialize b into zeros
-        # b: [1152, 10]
-        b = Variable(torch.zeros(1152, 10))
+        # b: [batch_size, 1152, 10, 1]
+        b = Variable(torch.zeros(batch_size, 1152, 10, 1))
         if self.opt.use_cuda & torch.cuda.is_available():
             b = b.cuda()
 
         # Start Routing
         for r in range(self.opt.r):
             # Line 4: c_i = softmax(b_i)
-            # c: [1152, 10]
-            c = F.softmax(b, dim=1)
-            c = c.unsqueeze(2).unsqueeze(0)
-            assert c.size() == torch.Size([1, 1152, 10, 1])
+            # c: [b, 1152, 10, 1]
+            c = F.softmax(b, dim=2)
+            assert c.size() == torch.Size([batch_size, 1152, 10, 1])
 
             # Line 5: s_j = sum_i(c_ij * u_hat_j|i)
             # u_hat: [batch_size, 1152, 10, 16]
@@ -109,10 +103,10 @@ class DigitCaps(nn.Module):
             # Line 7: b_ij += u_hat * v_j
             # u_hat: [batch_size, 1152, 10, 16]
             # v: [batch_size, 10, 16]
-            # a: [batch_size, 10, 1152, 1]
-            a = torch.matmul(u_hat.transpose(1, 2), v.unsqueeze(3))
-            # b: [1152, 10]
-            b = b + torch.sum(a.squeeze().transpose(1, 2), dim=0)
+            # a: [batch_size, 10, 1152, 16]
+            a = u_hat * v.unsqueeze(1)
+            # b: [batch_size, 1152, 10, 1]
+            b = b + torch.sum(a, dim=3, keepdim=True)
 
         return v
 

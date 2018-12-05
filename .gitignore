@@ -8,4 +8,3 @@ __pycache__/
 # data directory
 data/
 ckpt/
-runs/
