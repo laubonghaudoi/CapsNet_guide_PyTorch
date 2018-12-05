@@ -27,7 +27,7 @@ class DigitCaps(nn.Module):
 
     def __init__(self, opt):
         '''
-        There is only one parameter in this layer, `W` [1, 1152, 10, 16, 8], where 
+        There is only one parameter in this layer, `W` [1, 1152, 10, 16, 8], where
         every [8, 16] is a weight matrix W_ij in Eq.2, that is, there are 11520
         `W_ij`s in total.
 
@@ -51,7 +51,7 @@ class DigitCaps(nn.Module):
         In this layer, we vectorize our computations by calling `W` and using
         `torch.matmul()`. Thus the full computaion steps are as follows.
             1. Expand `W` into batches and compute `u_hat` (Eq.2)
-            2. Line 2: Initialize `b` into zeros 
+            2. Line 2: Initialize `b` into zeros
             3. Line 3: Start Routing for `r` iterations:
                 1. Line 4: c = softmax(b)
                 2. Line 5: s = sum(c * u_hat)
@@ -79,7 +79,7 @@ class DigitCaps(nn.Module):
 
         # Line 2: Initialize b into zeros
         # b: [batch_size, 1152, 10, 1]
-        b = Variable(corch.zeros(batch_size, 1152, 10, 1))
+        b = Variable(torch.zeros(batch_size, 1152, 10, 1))
         if self.opt.use_cuda & torch.cuda.is_available():
             b = b.cuda()
 
@@ -106,7 +106,7 @@ class DigitCaps(nn.Module):
             # a: [batch_size, 10, 1152, 16]
             a = u_hat * v.unsqueeze(1)
             # b: [batch_size, 1152, 10, 1]
-            b = b + torch.sum(a, dim=1, keepdim=True)
+            b = b + torch.sum(a, dim=3, keepdim=True)
 
         return v
 
