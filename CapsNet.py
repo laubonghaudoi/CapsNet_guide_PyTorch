@@ -34,10 +34,10 @@ class CapsNet(nn.Module):
     def forward(self, x):
         '''
         Args:
-            `x`: [batch_size, 1, 28, 28] A MNIST sample
+            `x`: [batch_size, 1, 28, 28] MNIST samples
         
         Return:
-            `v`: [batch_size, 10, 16] CapsNet outputs, 16D rediction vectors of
+            `v`: [batch_size, 10, 16] CapsNet outputs, 16D prediction vectors of
                 10 digit capsules
 
         The dimension transformation procedure of an input tensor in each layer:

@@ -7,7 +7,7 @@ class PrimaryCaps(nn.Module):
     '''
     The `PrimaryCaps` layer consists of 32 capsule units. Each unit takes
     the output of the `Conv1` layer, which is a `[256, 20, 20]` feature
-    tensor (ignoring `batch_size`), and performs a 2D convolution with 8
+    tensor (omitting `batch_size`), and performs a 2D convolution with 8
     output channels, kernel size 9 and stride 2, thus outputing a [8, 6, 6]
     tensor. In other words, you can see these 32 capsules as 32 paralleled 2D
     convolutional layers. Then we concatenate these 32 capsules' outputs and
@@ -16,7 +16,7 @@ class PrimaryCaps(nn.Module):
 
     As indicated in Section 4, Page 4 in the paper, *One can see PrimaryCaps
     as a Convolution layer with Eq.1 as its block non-linearity.*, outputs of
-    the `PrimaryCaps` layer are squashed before passing to the next layer.
+    the `PrimaryCaps` layer are squashed before being passed to the next layer.
 
     Reference: Section 4, Fig. 1
     '''

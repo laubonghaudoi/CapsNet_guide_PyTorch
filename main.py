@@ -17,7 +17,7 @@ For better understanding, read the codes and comments in the following order:
 8. `train()` and `test()` in `main.py`
 
 You might find helpful with the paper *Dynamic Routing Between Capsules*
-at your hand for referencing.
+at your hand for referencing when reading these codes.
 """
 
 import os
@@ -61,7 +61,8 @@ def train(opt, train_loader, test_loader, model, writer):
             assert target.size() == torch.Size([batch_size, 10])
 
             # Use GPU if available
-            data, target = Variable(data), Variable(target)
+            with torch.no_grad():
+            	data, target = Variable(data), Variable(target)
             if opt.use_cuda & torch.cuda.is_available():
                 data, target = data.cuda(), target.cuda()
 
@@ -113,23 +114,24 @@ def test(opt, test_loader, model, writer, epoch, num_batches):
         assert target.size() == torch.Size([batch_size, 10])
 
         # Use GPU if available
-        data, target = Variable(data, volatile=True), Variable(target)
+        with torch.no_grad():
+            data, target = Variable(data), Variable(target)
         if opt.use_cuda & torch.cuda.is_available():
             data, target = data.cuda(), target.cuda()
 
         # Output predictions
         output = model(data)
         L, m_loss, r_loss = model.loss(output, target, data)
-        loss += L
-        margin_loss += m_loss
-        recons_loss += r_loss
+        loss += L.item()
+        margin_loss += m_loss.item()
+        recons_loss += r_loss.item()
 
         # Count correct numbers
         # norms: [batch_size, 10, 16]
         norms = torch.sqrt(torch.sum(output**2, dim=2))
         # pred: [batch_size,]
         pred = norms.data.max(1, keepdim=True)[1].type(torch.LongTensor)
-        correct += pred.eq(label.view_as(pred)).cpu().sum()
+        correct += pred.eq(label.view_as(pred)).cpu().sum().item()
 
     # Visualize reconstructed images of the last batch
     recons = model.Decoder(output, target)
@@ -142,20 +144,20 @@ def test(opt, test_loader, model, writer, epoch, num_batches):
     margin_loss /= len(test_loader)
     recons_loss /= len(test_loader)
     acc = correct / len(test_loader.dataset)
-    writer.add_scalar('test/loss', loss.item(), step)
-    writer.add_scalar('test/marginal_loss', margin_loss.item(), step)
-    writer.add_scalar('test/reconstruction_loss', recons_loss.item(), step)
+    writer.add_scalar('test/loss', loss, step)
+    writer.add_scalar('test/marginal_loss', margin_loss, step)
+    writer.add_scalar('test/reconstruction_loss', recons_loss, step)
     writer.add_scalar('test/accuracy', acc, step)
 
     # Print test losses
     print('\nTest loss: {:.4f}   Marginal loss: {:.4f}   Recons loss: {:.4f}'.format(
-        loss.item(), margin_loss.item(), recons_loss.item()))
+        loss, margin_loss, recons_loss))
     print('Accuracy: {}/{} ({:.0f}%)\n'.format(correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
 
     # Checkpoint model
     torch.save(model, './ckpt/epoch_{}-loss_{:.6f}-acc_{:.6f}.pt'.format(
-        epoch, loss.item(), acc))
+        epoch, loss, acc))
 
 
 if __name__ == "__main__":
