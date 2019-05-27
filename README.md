@@ -3,9 +3,9 @@
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=plastic)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=plastic)](https://opensource.org/licenses/Apache-2.0)
 
-This is my PyTorch implementation of the CapsNet in Hinton's paper [Dynamic Routing Between Capsules](https://arxiv.org/abs/1710.09829v2). I try to implement it in a style that help newcomers understand the architecture of CapsNet and the idea of Capsules. Therefore I am not going to wrap the codes into capsule layer APIs, and I more oftenly declare constants rather than passing parameters to functions, neither are the codes optimized for speed. The classes and functions are supplemented with detailed comments, so to read and understand the codes, simply start from the comments in `main.py` and follow the order list at the head of the file.
+This is my PyTorch implementation of CapsNet in Hinton's paper [Dynamic Routing Between Capsules](https://arxiv.org/abs/1710.09829v2). I try to implement in a style that helps newcomers understand the architecture of CapsNet and the idea of Capsules. Therefore I am not going to wrap the codes into capsule layer APIs, and I more oftenly declare constants rather than passing parameters to functions, neither are the codes optimized for speed. The classes and functions are supplemented with detailed comments. To read and understand the codes, simply start from the comments in `main.py` and follow the order list at the head of the file.
 
-The picture below clearly illustrates the core idea of capsules:
+The figure below clearly illustrates the core idea of capsules:
 
 ![capsuleVSneuron](./img/capsuleVSneuron.png)
 
