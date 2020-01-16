@@ -13,10 +13,10 @@ class CapsNet(nn.Module):
     def __init__(self, opt):
         '''
         The CapsNet consists of 3 layers: `Conv1`, `PrimaryCaps`, `DigitCaps`.`Conv1`
-        is a ordinary 2D convolutional layer with 9x9 kernels, stride 2, 256 output
+        is an ordinary 2D convolutional layer with 9x9 kernels, stride 2, 256 output
         channels, and ReLU activations. `PrimaryCaps` and `DigitCaps` are two capsule
         layers with Dynamic Routing between them. For further details of these two
-        layers, see the docstrings of their classes. For each [1, 28, 18] input image,
+        layers, see the docstrings of their classes. For each [1, 28, 28] input image,
         CapsNet outputs a [16, 10] tensor, representing the 16-dimensional output
         vector from 10 digit capsules.
 
